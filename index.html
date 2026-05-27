@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome to Tyn-y-Coed · Zip World Basecamp</title>
+<meta name="viewport" content="width=1920, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Oswald = closest free analogue to Transducer Condensed Bold; Source Sans 3 = closest to Soleil -->
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ─── BASECAMP SUB-BRAND PALETTE (from brand guidelines p.16) ─── */
+    --basecamp:        #c3bea5;   /* primary */
+    --basecamp-tint:   #cdc8c3;
+    --basecamp-shade1: #787364;
+    --basecamp-shade2: #323228;   /* deepest */
+    /* Primary palette (p.15) */
+    --red:             #f03228;
+    --red-shade:       #820f05;
+    --granite:         #282323;
+    --granite-tint:    #878282;
+    --white:           #ffffff;
+
+    --type-dark:       #282323;   /* granite — body on light bg */
+    --type-light:      #ffffff;
+    --type-muted:      rgba(255,255,255,0.72);
+    --type-muted-dark: rgba(40,35,35,0.65);
+
+    --font-display: 'Oswald', 'Arial Narrow', sans-serif;       /* Transducer Condensed Bold stand-in */
+    --font-body:    'Source Sans 3', 'Helvetica Neue', sans-serif; /* Soleil stand-in */
+
+    --drop-shadow: 4px 4px 0 rgba(0,0,0,0.15);  /* p.20: 0% blur, 15% opacity */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;width:100%;overflow:hidden}
+  body{
+    font-family: var(--font-body);
+    color: var(--type-light);
+    background: var(--basecamp-shade2);
+    letter-spacing:0.005em;
+  }
+
+  /* ─── BARK TEXTURE OVERLAY (p.17, multiply at ~18%) ─── */
+  /* SVG bark — long horizontal grain on the deep Basecamp shade */
+  .bark{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900' preserveAspectRatio='none'><defs><filter id='n'><feTurbulence type='turbulence' baseFrequency='0.012 0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.5 0'/></filter></defs><rect width='1600' height='900' filter='url(%23n)' opacity='0.6'/></svg>");
+    background-size: cover;
+    mix-blend-mode: multiply;
+    opacity:0.35;
+  }
+  /* Warm radial wash so the bottom feels grounded */
+  .wash{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(195,190,165,0.18), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(120,115,100,0.35), transparent 60%);
+  }
+
+  .stage{
+    position:relative; z-index:2;
+    height:100vh; width:100vw;
+    padding: 22px 44px 18px;
+    display:grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 12px;
+    overflow:hidden;
+  }
+
+  /* ───────── HEADER ───────── */
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo-lockup{
+    display:flex; align-items:center; gap:18px;
+  }
+  /* Compact Zip World "logo" rendered in CSS — a stylised badge that respects the brand without trying to fake the actual SVG */
+  .zw-mark{
+    position:relative;
+    width:90px; height:90px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .zw-mark svg{ width:100%; height:100%; filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.25)); }
+
+  .lockup-text{
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .lockup-eyebrow{
+    display:inline-block;
+    background: var(--red);
+    color:var(--white);
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.08em;
+    padding:4px 10px 3px;
+    transform: rotate(-4deg);
+    align-self:flex-start;
+    box-shadow: var(--drop-shadow);
+  }
+  .lockup-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:34px;
+    line-height:1;
+    text-transform:uppercase;
+    color:var(--white);
+    letter-spacing:0.01em;
+    transform: rotate(-2deg) translateX(6px);
+    text-shadow: var(--drop-shadow);
+    margin-top:3px;
+  }
+  .lockup-sub{
+    margin-top:6px;
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--type-muted);
+    font-weight:600;
+  }
+
+  .clock-pill{
+    display:flex; flex-direction:column; align-items:flex-end; gap:6px;
+  }
+  .clock-label{
+    font-family:var(--font-display);
+    background: var(--red);
+    color:var(--white);
+    font-size:12px; letter-spacing:0.18em;
+    padding:4px 10px 3px;
+    transform: rotate(4deg);
+    box-shadow: var(--drop-shadow);
+  }
+  .clock-time{
+    font-family:var(--font-display);
+    font-size:28px;
+    color:var(--white);
+    letter-spacing:0.04em;
+    text-shadow: var(--drop-shadow);
+  }
+
+  /* ───────── HERO HEADLINE LOCK-UP (p.19) ───────── */
+  .hero{
+    padding: 0;
+    position:relative;
+  }
+  .hero-eyebrow{
+    display:inline-block;
+    background: var(--red);
+    color:var(--white);
+    font-family:var(--font-display);
+    font-size:16px; letter-spacing:0.06em;
+    padding:4px 10px 3px;
+    transform: rotate(-4deg);
+    box-shadow: var(--drop-shadow);
+    margin-bottom:4px;
+  }
+  .hero-line{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    color:var(--white);
+    text-shadow: var(--drop-shadow);
+    line-height:0.9;
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  .hero-line .word-1{
+    font-size:54px;
+    transform: rotate(-3deg);
+    display:inline-block;
+  }
+  .hero-line .word-2{
+    font-size:40px;
+    transform: rotate(3deg);
+    display:inline-block;
+    color: var(--basecamp);
+  }
+  .hero-line .word-3{
+    font-size:54px;
+    transform: rotate(-3deg);
+    display:inline-block;
+  }
+  .hero-sub{
+    margin-top:6px;
+    max-width:880px;
+    font-size:14px;
+    line-height:1.4;
+    color:var(--type-muted);
+    font-weight:400;
+  }
+  /* decorative leaves icon (Basecamp uses leaves per p.22) */
+  .leaf{
+    position:absolute;
+    color: var(--basecamp-shade1);
+    opacity:0.85;
+  }
+  .leaf.l1{ top:-2px; left:320px; width:18px; transform:rotate(-30deg) }
+  .leaf.l2{ top:28px; left:520px; width:14px; transform:rotate(40deg) }
+  .leaf.l3{ top:60px; left:200px; width:13px; transform:rotate(15deg) }
+
+  /* ───────── INFO GRID ───────── */
+  .grid{
+    display:grid;
+    grid-template-columns: 1.15fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    align-self: stretch;
+    min-height:0;
+  }
+  .card{
+    position:relative;
+    background: var(--basecamp);
+    color: var(--type-dark);
+    border-radius: 4px;
+    padding: 14px 18px;
+    display:flex; flex-direction:column;
+    transition: transform .18s ease, box-shadow .18s ease;
+    overflow:hidden;
+    min-height:0;
+  }
+  /* Bark texture inside the card (very subtle) */
+  .card::after{
+    content:""; position:absolute; inset:0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><defs><filter id='n'><feTurbulence type='turbulence' baseFrequency='0.015 0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2   0 0 0 0 0.18   0 0 0 0 0.15   0 0 0 0.4 0'/></filter></defs><rect width='400' height='300' filter='url(%23n)' opacity='0.55'/></svg>");
+    mix-blend-mode: multiply; opacity:0.22; pointer-events:none;
+  }
+  .card:focus, .card:hover{
+    outline:none;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 0 -4px var(--red), 0 18px 30px rgba(0,0,0,0.45);
+  }
+  /* Focus state: red accent corner tab */
+  .card:focus::before, .card:hover::before{
+    content:""; position:absolute;
+    top:-6px; left:-6px;
+    width:48px; height:48px;
+    background: var(--red);
+    transform: rotate(-8deg);
+    z-index:1;
+  }
+
+  .card-head{
+    display:flex; align-items:center; gap:8px;
+    margin-bottom:8px;
+    position:relative; z-index:2;
+  }
+  .card-tag{
+    background: var(--red);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing:0.1em;
+    padding: 3px 8px 2px;
+    transform: rotate(-3deg);
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    text-transform:uppercase;
+    flex-shrink:0;
+  }
+  .card-h{
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-transform:uppercase;
+    color: var(--basecamp-shade2);
+    letter-spacing: 0.02em;
+    transform: rotate(-1.5deg);
+    line-height:1;
+  }
+  .card-body{ position:relative; z-index:2; display:flex; flex-direction:column; flex:1; }
+
+  /* ── WIFI card ── */
+  .wifi-label{
+    font-family:var(--font-display);
+    font-size:11px; letter-spacing:0.22em;
+    color: var(--basecamp-shade1);
+    text-transform:uppercase;
+    margin-top:4px;
+  }
+  .wifi-value{
+    font-family: 'Courier New', monospace;
+    font-size:22px; font-weight:700;
+    color: var(--basecamp-shade2);
+    letter-spacing:0.04em;
+    line-height:1.1;
+    margin-top:2px;
+  }
+  .wifi-note{
+    margin-top:auto;
+    font-size:11px;
+    color: var(--type-muted-dark);
+    font-style:italic;
+    padding-top:8px;
+  }
+
+  /* ── DINING card ── */
+  .dine-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:3px 0;
+    border-bottom:1px solid rgba(50,50,40,0.12);
+    font-size:13.5px;
+  }
+  .dine-row:last-of-type{ border-bottom:none }
+  .dine-row .meal{
+    font-weight:600; color: var(--basecamp-shade2);
+  }
+  .dine-row .time{
+    font-family: var(--font-display);
+    font-size:14px;
+    color: var(--red);
+    letter-spacing:0.04em;
+  }
+  .dine-foot{
+    margin-top:auto; padding-top:8px;
+    font-family:var(--font-display);
+    font-size:10px; letter-spacing:0.18em;
+    color: var(--basecamp-shade1);
+    text-transform:uppercase;
+  }
+
+  /* ── CONTACT card ── */
+  .contact-phone{
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--basecamp-shade2);
+    letter-spacing:0.04em;
+    margin: 2px 0 6px;
+    transform: rotate(-1deg);
+    line-height:1;
+  }
+  .contact-line{
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; padding:2px 0;
+    color: var(--basecamp-shade2);
+  }
+  .contact-line svg{
+    width:13px; height:13px; color: var(--red); flex-shrink:0;
+  }
+  .checkinout{
+    margin-top:auto; padding-top:8px;
+    display:flex; justify-content:space-between; align-items:stretch;
+    gap:8px;
+  }
+  .checkinout .col{ text-align:center; flex:1 }
+  .checkinout .col-label{
+    font-family:var(--font-display);
+    font-size:10px; letter-spacing:0.2em;
+    color: var(--basecamp-shade1);
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+  .checkinout .col-time{
+    font-family: var(--font-display);
+    font-size:22px;
+    color: var(--basecamp-shade2);
+  }
+  .checkinout .divider{
+    width:1px; background: rgba(50,50,40,0.18);
+  }
+
+  /* ── ZIP WORLD card (uses primary red palette per brand guidelines — Zip World adventures = primary brand) ── */
+  .zip-card{
+    background: var(--red);
+    color: var(--white);
+  }
+  .zip-card::after{
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><defs><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='3' seed='5'/><feColorMatrix values='0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.6 0'/></filter></defs><rect width='400' height='300' filter='url(%23c)' opacity='0.4'/></svg>");
+    opacity:0.18;
+  }
+  .zip-card .card-tag{
+    background: var(--basecamp-shade2);
+  }
+  .zip-card .card-h{ color: var(--white); }
+  .zip-card .perk-number{
+    font-family: var(--font-display);
+    font-size: 46px;
+    color: var(--white);
+    line-height:0.9;
+    transform: rotate(-4deg);
+    display:inline-block;
+    text-shadow: var(--drop-shadow);
+    margin: 2px 0 4px;
+  }
+  .zip-card .perk-sub{
+    font-size:12.5px; line-height:1.35;
+    color: rgba(255,255,255,0.95);
+    margin-bottom:8px;
+  }
+  .zip-list{ margin-top:auto; font-size:12.5px }
+  .zip-list .row{
+    display:flex; justify-content:space-between;
+    padding:3px 0;
+    border-bottom:1px solid rgba(255,255,255,0.18);
+  }
+  .zip-list .row:last-child{ border-bottom:none }
+  .zip-list .row .when{
+    font-family:var(--font-display);
+    letter-spacing:0.04em;
+  }
+
+  /* ── AMENITIES ── */
+  .amen-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 12px;
+  }
+  .amen{
+    display:flex; align-items:center; gap:7px;
+    font-size:12.5px; color: var(--basecamp-shade2);
+    font-weight:600;
+  }
+  .amen .arrow{
+    color: var(--red);
+    flex-shrink:0;
+    font-size:13px;
+    transform: translateY(-1px);
+  }
+
+  /* ── EXPLORE card (spans 2) ── */
+  .explore-list{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 24px;
+    list-style:none;
+  }
+  .explore-list li{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:3px 0;
+    border-bottom:1px solid rgba(50,50,40,0.12);
+    font-size:13px;
+  }
+  .explore-list .name{ font-weight:600; color: var(--basecamp-shade2) }
+  .explore-list .meta{
+    font-family:var(--font-display);
+    font-size:10px;
+    letter-spacing:0.14em;
+    color: var(--red);
+    text-transform:uppercase;
+  }
+
+  /* ───────── FOOTER ───────── */
+  footer{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:4px;
+    border-top: 2px solid rgba(195,190,165,0.18);
+  }
+  footer .thanks{
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing:0.12em;
+    color: var(--basecamp);
+  }
+  footer .thanks .red{
+    background: var(--red);
+    color: var(--white);
+    padding: 2px 8px 1px;
+    transform: rotate(-3deg);
+    display:inline-block;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    margin-right:6px;
+  }
+  .nav-hint{
+    display:flex; gap:20px; align-items:center;
+    font-family:var(--font-display);
+    font-size:11px; letter-spacing:0.18em;
+    color: var(--type-muted);
+    text-transform:uppercase;
+  }
+  .key{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:22px; height:22px; padding:0 6px;
+    border:1.5px solid var(--basecamp);
+    background: transparent;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size:12px;
+    margin-right:5px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="bark" aria-hidden="true"></div>
+<div class="wash" aria-hidden="true"></div>
+
+<main class="stage">
+
+  <!-- ───────── HEADER ───────── -->
+  <header>
+    <div class="logo-lockup">
+      <!-- Stylised Zip World mark (CSS/SVG approximation — keyline white per brand guidance for use on dark bg) -->
+      <div class="zw-mark" aria-label="Zip World Basecamp">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- outer keyline blob -->
+          <ellipse cx="60" cy="58" rx="50" ry="44" fill="none" stroke="#fff" stroke-width="3.5" transform="rotate(-8 60 58)"/>
+          <!-- zip line orbit -->
+          <ellipse cx="60" cy="58" rx="50" ry="22" fill="none" stroke="#fff" stroke-width="4" transform="rotate(-18 60 58)"/>
+          <!-- ZIP text -->
+          <text x="60" y="58" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="34" fill="#f03228" stroke="#fff" stroke-width="1" letter-spacing="0">ZIP</text>
+          <!-- WORLD text -->
+          <text x="60" y="82" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="0.5">WORLD</text>
+        </svg>
+      </div>
+      <div class="lockup-text">
+        <span class="lockup-eyebrow">BASECAMP</span>
+        <span class="lockup-title">Tyn-y-Coed</span>
+        <span class="lockup-sub">Capel Curig · Eryri</span>
+      </div>
+    </div>
+    <div class="clock-pill">
+      <span class="clock-label">TODAY</span>
+      <span class="clock-time" id="clock">--:--</span>
+    </div>
+  </header>
+
+  <!-- ───────── HERO HEADLINE LOCK-UP ───────── -->
+  <section class="hero">
+    <svg class="leaf l1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+    <svg class="leaf l2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+    <svg class="leaf l3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+
+    <span class="hero-eyebrow">WELCOME TO</span>
+    <div class="hero-line">
+      <span class="word-1">A TRADITIONAL</span>
+      <span class="word-2">WELSH</span>
+      <span class="word-3">INN</span>
+    </div>
+    <p class="hero-sub">In the heart of Eryri (Snowdonia) — cosy log burners, locally sourced food, and the mountains right outside your window.</p>
+  </section>
+
+  <!-- ───────── INFO GRID ───────── -->
+  <div class="grid">
+
+    <!-- WI-FI -->
+    <article class="card" tabindex="0">
+      <div class="card-head">
+        <span class="card-tag">CONNECT</span>
+        <h2 class="card-h">Wi-Fi</h2>
+      </div>
+      <div class="card-body">
+        <div class="wifi-label">Network</div>
+        <div class="wifi-value">Tyn-y-Coed Guest</div>
+        <div class="wifi-label" style="margin-top:10px">Password</div>
+        <div class="wifi-value">welcome2026</div>
+        <div class="wifi-note">Complimentary throughout the inn — ask reception if you need a hand.</div>
+      </div>
+    </article>
+
+    <!-- DINING -->
+    <article class="card" tabindex="0">
+      <div class="card-head">
+        <span class="card-tag">EAT</span>
+        <h2 class="card-h">Pub Hours</h2>
+      </div>
+      <div class="card-body">
+        <div class="dine-row"><span class="meal">Breakfast</span><span class="time">7:30 – 10:00</span></div>
+        <div class="dine-row"><span class="meal">Lunch</span><span class="time">12:00 – 16:00</span></div>
+        <div class="dine-row"><span class="meal">Dinner Mon–Thu</span><span class="time">17:00 – 20:30</span></div>
+        <div class="dine-row"><span class="meal">Dinner Fri–Sat</span><span class="time">17:00 – 21:00</span></div>
+        <div class="dine-row"><span class="meal">Sunday all day</span><span class="time">12:00 – 20:00</span></div>
+        <div class="dine-foot">Walk-ins always welcome</div>
+      </div>
+    </article>
+
+    <!-- RECEPTION -->
+    <article class="card" tabindex="0">
+      <div class="card-head">
+        <span class="card-tag">CALL</span>
+        <h2 class="card-h">Reception</h2>
+      </div>
+      <div class="card-body">
+        <div class="contact-phone">01690 720 331</div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>res@tyn-y-coed.co.uk</span>
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Capel Curig, LL24 0EE</span>
+        </div>
+        <div class="checkinout">
+          <div class="col">
+            <div class="col-label">Check-In</div>
+            <div class="col-time">3 PM</div>
+          </div>
+          <div class="divider"></div>
+          <div class="col">
+            <div class="col-label">Check-Out</div>
+            <div class="col-time">11 AM</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ZIP WORLD (uses primary brand red — this is the Zip World mothership, not Basecamp) -->
+    <article class="card zip-card" tabindex="0">
+      <div class="card-head">
+        <span class="card-tag">UNLOCK</span>
+        <h2 class="card-h">Zip World</h2>
+      </div>
+      <div class="card-body">
+        <div class="perk-number">10% OFF</div>
+        <div class="perk-sub">Guest discount across every Zip World site. Show your booking at reception.</div>
+        <div class="zip-list">
+          <div class="row"><span>Betws-y-Coed</span><span class="when">13 MIN</span></div>
+          <div class="row"><span>Penrhyn Quarry</span><span class="when">22 MIN</span></div>
+          <div class="row"><span>Llechwedd</span><span class="when">26 MIN</span></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- AMENITIES -->
+    <article class="card" tabindex="0">
+      <div class="card-head">
+        <span class="card-tag">INSIDE</span>
+        <h2 class="card-h">In the Inn</h2>
+      </div>
+      <div class="card-body">
+        <div class="amen-grid">
+          <div class="amen"><span class="arrow">▸</span> Tea &amp; Coffee</div>
+          <div class="amen"><span class="arrow">▸</span> Log Burners</div>
+          <div class="amen"><span class="arrow">▸</span> En-suite Showers</div>
+          <div class="amen"><span class="arrow">▸</span> Free Parking</div>
+          <div class="amen"><span class="arrow">▸</span> Dog Friendly</div>
+          <div class="amen"><span class="arrow">▸</span> Mountain Views</div>
+          <div class="amen"><span class="arrow">▸</span> Secure Bike Store</div>
+          <div class="amen"><span class="arrow">▸</span> Laundry Room</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ON YOUR DOORSTEP -->
+    <article class="card" tabindex="0" style="grid-column: span 3">
+      <div class="card-head">
+        <span class="card-tag">EXPLORE</span>
+        <h2 class="card-h">On Your Doorstep</h2>
+      </div>
+      <div class="card-body">
+        <ul class="explore-list">
+          <li><span class="name">Moel Siabod</span><span class="meta">▸ Hike · From the door</span></li>
+          <li><span class="name">Yr Wyddfa (Snowdon)</span><span class="meta">▸ Mountain · 10 min drive</span></li>
+          <li><span class="name">Swallow Falls</span><span class="meta">▸ Waterfall · 8 min drive</span></li>
+          <li><span class="name">Tryfan &amp; the Glyders</span><span class="meta">▸ Hike · 10 min drive</span></li>
+          <li><span class="name">Fairy Glen, Betws-y-Coed</span><span class="meta">▸ Beauty spot · 12 min</span></li>
+          <li><span class="name">Gwydir Forest</span><span class="meta">▸ MTB &amp; trails · 15 min</span></li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ───────── FOOTER ───────── -->
+  <footer>
+    <div class="thanks"><span class="red">DIOLCH</span> Thank you for staying with us</div>
+    <div class="nav-hint">
+      <span><span class="key">▲</span><span class="key">▼</span><span class="key">◀</span><span class="key">▶</span> Navigate</span>
+      <span><span class="key">OK</span> Select</span>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  function updateClock(){
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent = h + ':' + m;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  const cards = Array.from(document.querySelectorAll('.card'));
+  if (cards.length) cards[0].focus();
+
+  function rectOf(el){ return el.getBoundingClientRect(); }
+  function nearestIn(direction, from){
+    const f = rectOf(from);
+    const fx = f.left + f.width/2;
+    const fy = f.top + f.height/2;
+    let best = null, bestScore = Infinity;
+    cards.forEach(c => {
+      if (c === from) return;
+      const r = rectOf(c);
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const dx = cx - fx, dy = cy - fy;
+      if (direction === 'left'  && dx >= -2) return;
+      if (direction === 'right' && dx <=  2) return;
+      if (direction === 'up'    && dy >= -2) return;
+      if (direction === 'down'  && dy <=  2) return;
+      let primary, secondary;
+      if (direction === 'left' || direction === 'right'){
+        primary = Math.abs(dx); secondary = Math.abs(dy) * 2;
+      } else {
+        primary = Math.abs(dy); secondary = Math.abs(dx) * 2;
+      }
+      const score = primary + secondary;
+      if (score < bestScore){ bestScore = score; best = c; }
+    });
+    return best;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const active = document.activeElement;
+    if (!cards.includes(active)) { cards[0].focus(); return; }
+    let dir = null;
+    switch(e.key){
+      case 'ArrowLeft':  dir = 'left'; break;
+      case 'ArrowRight': dir = 'right'; break;
+      case 'ArrowUp':    dir = 'up'; break;
+      case 'ArrowDown':  dir = 'down'; break;
+    }
+    if (dir){
+      const next = nearestIn(dir, active);
+      if (next){ e.preventDefault(); next.focus(); }
+    }
+  });
+</script>
+</body>
+</html>
