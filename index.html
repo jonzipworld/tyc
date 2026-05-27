@@ -269,28 +269,61 @@
   .card-body{ position:relative; z-index:2; display:flex; flex-direction:column; flex:1; }
 
   /* ── WIFI card ── */
+  .wifi-body{
+    flex-direction:row !important;
+    align-items:stretch;
+    gap:14px;
+  }
+  .wifi-info{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
   .wifi-label{
     font-family:var(--font-display);
     font-size:14px; letter-spacing:0.22em;
     color: var(--basecamp-shade1);
     text-transform:uppercase;
-    margin-top:8px;
+    margin-top:6px;
   }
   .wifi-value{
-    font-family: 'Courier New', monospace;
-    font-size:28px; font-weight:700;
+    font-family: var(--font-display);
+    font-size:24px; font-weight:700;
     color: var(--basecamp-shade2);
-    letter-spacing:0.04em;
+    letter-spacing:0.02em;
     line-height:1.1;
     margin-top:4px;
+    text-transform:uppercase;
+    transform:rotate(-1.5deg);
+    transform-origin:left center;
+    word-break:break-word;
   }
-  .wifi-note{
+  .wifi-scan-label{
     margin-top:auto;
-    font-size:14px;
-    color: var(--type-muted-dark);
-    font-style:italic;
+    font-family:var(--font-display);
+    font-size:13px;
+    letter-spacing:0.18em;
+    color: var(--red);
+    text-transform:uppercase;
     padding-top:10px;
-    line-height:1.35;
+  }
+  .wifi-qr{
+    flex-shrink:0;
+    width:130px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    padding:8px;
+    border-radius:4px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
+    align-self:center;
+  }
+  .wifi-qr img{
+    width:100%;
+    height:auto;
+    display:block;
   }
 
   /* ── DINING card ── */
@@ -529,12 +562,15 @@
         <span class="card-tag">CONNECT</span>
         <h2 class="card-h">Wi-Fi</h2>
       </div>
-      <div class="card-body">
-        <div class="wifi-label">Network</div>
-        <div class="wifi-value">Tyn-y-Coed Guest</div>
-        <div class="wifi-label" style="margin-top:14px">Password</div>
-        <div class="wifi-value" style="font-style:italic; font-family:var(--font-body); font-size:22px; color:var(--basecamp-shade1)">None — open network</div>
-        <div class="wifi-note">Complimentary throughout the inn — ask reception if you need a hand.</div>
+      <div class="card-body wifi-body">
+        <div class="wifi-info">
+          <div class="wifi-label">Network</div>
+          <div class="wifi-value">Tyn-y-Coed Guest</div>
+          <div class="wifi-scan-label">Scan to connect</div>
+        </div>
+        <div class="wifi-qr">
+          <img src="wifi-qr.jpg" alt="Scan to join the Tyn-y-Coed guest Wi-Fi">
+        </div>
       </div>
     </article>
 
