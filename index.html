@@ -273,7 +273,44 @@
     grid-template-rows: 1fr 1fr; gap:16px; min-height:0;
   }
   .selector-grid .card{ justify-content:flex-start; }
-  .selector-card-desc{ font-size:15px; color:var(--basecamp-shade2); margin-top:4px; line-height:1.4; }
+
+  /* Photo layer: sits behind the text (the .card::after bark texture is on top of this via z-index).
+     A separate ::before-like element via the .photo div carries the image + soft fade mask. */
+  .selector-grid .card .photo{
+    position:absolute; inset:0; z-index:1;
+    background-size: cover;
+    background-position: center;
+    /* Single diagonal fade: photo is solid in the bottom-right, dissolves softly
+       toward the top-left where the tag, title and text sit. One gradient = no
+       mask-compositing quirks, works reliably on TV browsers. */
+    -webkit-mask-image: linear-gradient(125deg,
+      rgba(0,0,0,0) 18%, rgba(0,0,0,0.35) 42%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,1) 100%);
+    mask-image: linear-gradient(125deg,
+      rgba(0,0,0,0) 18%, rgba(0,0,0,0.35) 42%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,1) 100%);
+    opacity:0.95;
+  }
+  /* Stone tint over the photo so brand colour reads through and text stays legible.
+     Solid stone behind the text (top-left), clearing toward the photo (bottom-right). */
+  .selector-grid .card .photo::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(125deg,
+      var(--basecamp) 8%,
+      rgba(195,190,165,0.6) 38%,
+      rgba(195,190,165,0.12) 62%,
+      rgba(195,190,165,0) 82%);
+  }
+  /* Keep the text/content above the photo */
+  .selector-grid .card .card-head,
+  .selector-grid .card .card-body{ position:relative; z-index:2; }
+
+  /* Per-card images */
+  .photo-breakfast{ background-image:url("img-breakfast.png"); }
+  .photo-lunch{     background-image:url("img-lunch.png"); }
+  .photo-main{      background-image:url("img-main.png"); }
+  .photo-drinks{    background-image:url("img-drinks.webp"); }
+  .photo-kids{      background-image:url("img-kids.webp"); }
+
+  .selector-card-desc{ font-size:15px; color:var(--basecamp-shade2); margin-top:4px; line-height:1.4; max-width:60%; font-weight:600; }
   .selector-card-foot{
     margin-top:auto; font-family:var(--font-display); font-size:12px;
     letter-spacing:0.18em; color:var(--red); text-transform:uppercase; padding-top:10px;
@@ -474,6 +511,7 @@
     </div>
     <div class="selector-grid">
       <button class="card" data-pdf="breakfast.pdf" data-eyebrow="BWYDLEN BRECWAST" data-title="Breakfast" tabindex="0">
+        <div class="photo photo-breakfast"></div>
         <div class="card-head"><span class="card-tag">MORNING</span><h2 class="card-h">Breakfast</h2></div>
         <div class="card-body">
           <div class="selector-card-desc">Full Welsh, veggie options, lighter starts.</div>
@@ -481,6 +519,7 @@
         </div>
       </button>
       <button class="card" data-pdf="lunch.pdf" data-eyebrow="BWYDLEN AMSER CINIO" data-title="Lunch" tabindex="0">
+        <div class="photo photo-lunch"></div>
         <div class="card-head"><span class="card-tag">MIDDAY</span><h2 class="card-h">Lunch</h2></div>
         <div class="card-body">
           <div class="selector-card-desc">Light bites, paninis, jackets &amp; desserts.</div>
@@ -488,6 +527,7 @@
         </div>
       </button>
       <button class="card" data-pdf="main-menu.pdf" data-eyebrow="PRIF FWYDLEN" data-title="Main Menu" tabindex="0">
+        <div class="photo photo-main"></div>
         <div class="card-head"><span class="card-tag">EVENING</span><h2 class="card-h">Main Menu</h2></div>
         <div class="card-body">
           <div class="selector-card-desc">Starters, grills, mains, sides &amp; puds.</div>
@@ -495,6 +535,7 @@
         </div>
       </button>
       <button class="card" data-pdf="drinks.pdf" data-eyebrow="DIODYDD" data-title="Drinks" tabindex="0">
+        <div class="photo photo-drinks"></div>
         <div class="card-head"><span class="card-tag">BAR</span><h2 class="card-h">Drinks</h2></div>
         <div class="card-body">
           <div class="selector-card-desc">Cask ales, ciders, wines, soft drinks &amp; alcohol-free.</div>
@@ -502,6 +543,7 @@
         </div>
       </button>
       <button class="card" data-pdf="kids.pdf" data-eyebrow="BWYDLEN PLANT" data-title="Kids' Menu" tabindex="0">
+        <div class="photo photo-kids"></div>
         <div class="card-head"><span class="card-tag">FAMILY</span><h2 class="card-h">Kids' Menu</h2></div>
         <div class="card-body">
           <div class="selector-card-desc">Mains £7.50 · Desserts £4.50.</div>
