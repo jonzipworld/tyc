@@ -647,24 +647,23 @@
 
   /* ──────────────────────────────────────────────
      SOUND ENGINE (Web Audio API — no files needed)
-     - Soft ambient pad loop
-     - Gentle navigation tick + select/back chimes
+     - Looping background music (menu_music.mp3)
+     - Gentle navigation tick + select/back chimes (synthesized)
      - "On by default" but browsers block audio until the
        first user gesture, so we start on the first key/click.
      ────────────────────────────────────────────── */
   const Sound = (() => {
     let ctx = null;
-    let master = null;          // overall volume
+    let master = null;          // overall volume for the synth chimes
     let muted = false;
     let started = false;
-    let padTimer = null;
 
-    // Bright C-major pentatonic, higher register — warm and welcoming, never eerie.
-    // C5 D5 E5 G5 A5 C6  (one octave up from before = lighter, friendlier)
-    const PAD_NOTES = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
-    // A gentle repeating melodic shape so it feels musical, not random/ambient-creepy
-    const MELODY = [0, 2, 4, 2, 3, 1, 4, 5, 3, 1, 2, 0];
-    let melodyStep = 0;
+    // Background music: real MP3 file, looped.
+    const music = new Audio('menu_music.mp3');
+    music.loop = true;
+    music.preload = 'auto';
+    const MUSIC_VOL = 0.45;     // soft background level
+    music.volume = 0;           // start silent, fade in
 
     function init(){
       if (ctx) return;
@@ -676,7 +675,7 @@
       master.connect(ctx.destination);
     }
 
-    // A soft "voice" with gentle attack/release. type triangle = a little warmer/rounder.
+    // A soft "voice" with gentle attack/release — used for the chimes only.
     function voice(freq, dur, peak, type='triangle', when=0){
       if (!ctx) return;
       const t = ctx.currentTime + when;
@@ -686,40 +685,45 @@
       osc.frequency.value = freq;
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowpass';
-      lp.frequency.value = 3200;          // brighter than before
+      lp.frequency.value = 3200;
       osc.connect(lp); lp.connect(g); g.connect(master);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(peak, t + Math.min(0.04, dur*0.2));  // quick, plucky attack
+      g.gain.exponentialRampToValueAtTime(peak, t + Math.min(0.04, dur*0.2));
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       osc.start(t);
       osc.stop(t + dur + 0.05);
     }
 
-    // Ambient melody: short, light plucked notes following a cheerful pattern,
-    // with a soft note a third/fifth above for a little warmth.
-    function padTick(){
-      if (!ctx || muted) return;
-      const idx = MELODY[melodyStep % MELODY.length];
-      melodyStep++;
-      const note = PAD_NOTES[idx];
-      voice(note, 1.1, 0.07, 'triangle');                 // short, bell-like pluck
-      voice(note*2, 0.9, 0.025, 'sine', 0.02);            // soft shimmer an octave up
+    // Smoothly ramp the music volume
+    let fadeTimer = null;
+    function fadeMusic(target){
+      if (fadeTimer) clearInterval(fadeTimer);
+      const step = 0.03;
+      fadeTimer = setInterval(() => {
+        const diff = target - music.volume;
+        if (Math.abs(diff) <= step){
+          music.volume = target;
+          clearInterval(fadeTimer); fadeTimer = null;
+          if (target === 0) music.pause();
+        } else {
+          music.volume = Math.max(0, Math.min(1, music.volume + Math.sign(diff)*step));
+        }
+      }, 60);
     }
 
-    function startAmbient(){
-      if (padTimer) return;
-      padTick();
-      padTimer = setInterval(padTick, 900);  // a note every ~0.9s — gentle, flowing pace
+    function startMusic(){
+      if (muted) return;
+      const p = music.play();
+      if (p && p.catch) p.catch(()=>{}); // ignore autoplay rejections; retried on next gesture
+      fadeMusic(MUSIC_VOL);
     }
 
     // Called on the first user gesture
     function start(){
-      if (started) return;
       init();
-      if (!ctx) return;
-      if (ctx.state === 'suspended') ctx.resume();
+      if (ctx && ctx.state === 'suspended') ctx.resume();
       started = true;
-      if (!muted) startAmbient();
+      if (!muted) startMusic();
     }
 
     // Navigation tick — very short, soft
@@ -742,15 +746,16 @@
 
     function setMuted(m){
       muted = m;
+      // chimes volume
       if (master && ctx){
-        // smooth fade to avoid clicks
         master.gain.cancelScheduledValues(ctx.currentTime);
         master.gain.setTargetAtTime(muted ? 0 : 0.5, ctx.currentTime, 0.2);
       }
+      // music
       if (muted){
-        if (padTimer){ clearInterval(padTimer); padTimer = null; }
+        fadeMusic(0);
       } else if (started){
-        startAmbient();
+        startMusic();
       }
     }
     function isMuted(){ return muted; }
