@@ -6,31 +6,24 @@
 <meta name="viewport" content="width=1920, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Oswald = closest free analogue to Transducer Condensed Bold; Source Sans 3 = closest to Soleil -->
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* ─── BASECAMP SUB-BRAND PALETTE (from brand guidelines p.16) ─── */
-    --basecamp:        #c3bea5;   /* primary */
+    --basecamp:        #c3bea5;
     --basecamp-tint:   #cdc8c3;
     --basecamp-shade1: #787364;
-    --basecamp-shade2: #323228;   /* deepest */
-    /* Primary palette (p.15) */
+    --basecamp-shade2: #323228;
     --red:             #f03228;
     --red-shade:       #820f05;
     --granite:         #282323;
-    --granite-tint:    #878282;
     --white:           #ffffff;
-
-    --type-dark:       #282323;   /* granite — body on light bg */
+    --type-dark:       #282323;
     --type-light:      #ffffff;
     --type-muted:      rgba(255,255,255,0.72);
     --type-muted-dark: rgba(40,35,35,0.65);
-
-    --font-display: 'Oswald', 'Arial Narrow', sans-serif;       /* Transducer Condensed Bold stand-in */
-    --font-body:    'Source Sans 3', 'Helvetica Neue', sans-serif; /* Soleil stand-in */
-
-    --drop-shadow: 4px 4px 0 rgba(0,0,0,0.15);  /* p.20: 0% blur, 15% opacity */
+    --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+    --font-body:    'Source Sans 3', 'Helvetica Neue', sans-serif;
+    --drop-shadow: 4px 4px 0 rgba(0,0,0,0.15);
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -42,8 +35,7 @@
     letter-spacing:0.005em;
   }
 
-  /* ─── BARK TEXTURE OVERLAY (p.17, multiply at ~18%) ─── */
-  /* SVG bark — long horizontal grain on the deep Basecamp shade */
+  /* Background textures */
   .bark{
     position:fixed; inset:0; pointer-events:none; z-index:0;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900' preserveAspectRatio='none'><defs><filter id='n'><feTurbulence type='turbulence' baseFrequency='0.012 0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.5 0'/></filter></defs><rect width='1600' height='900' filter='url(%23n)' opacity='0.6'/></svg>");
@@ -51,7 +43,6 @@
     mix-blend-mode: multiply;
     opacity:0.35;
   }
-  /* Warm radial wash so the bottom feels grounded */
   .wash{
     position:fixed; inset:0; pointer-events:none; z-index:0;
     background:
@@ -59,8 +50,16 @@
       radial-gradient(ellipse at 100% 100%, rgba(120,115,100,0.35), transparent 60%);
   }
 
-  .stage{
-    position:relative; z-index:2;
+  /* Screen container — only .active is shown. !important keeps hidden screens hidden. */
+  .screen{
+    position:fixed; inset:0; z-index:2;
+    display:none !important;
+    flex-direction:column;
+  }
+  .screen.active{ display:flex !important; }
+
+  /* ─────────── HOME ─────────── */
+  .home-stage{
     height:100vh; width:100vw;
     padding: 28px 48px 22px;
     display:grid;
@@ -68,450 +67,261 @@
     gap: 16px;
     overflow:hidden;
   }
-
-  /* ───────── HEADER ───────── */
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .logo-lockup{
-    display:flex; align-items:center; gap:18px;
-  }
-  /* Compact Zip World "logo" rendered in CSS — a stylised badge that respects the brand without trying to fake the actual SVG */
-  .zw-mark{
-    position:relative;
-    width:110px; height:110px;
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink:0;
-  }
-  .zw-mark img{
-    width:100%; height:100%;
-    object-fit:contain;
-    filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.35));
-  }
-
-  .lockup-text{
-    display:flex; flex-direction:column; gap:2px;
-  }
-  .lockup-eyebrow{
-    display:inline-block;
-    background: var(--red);
-    color:var(--white);
-    font-family:var(--font-display);
-    font-weight:700;
-    font-size:14px;
-    letter-spacing:0.08em;
-    padding:4px 10px 3px;
-    transform: rotate(-4deg);
-    align-self:flex-start;
-    box-shadow: var(--drop-shadow);
-  }
+  header{ display:flex; align-items:center; justify-content:space-between; }
+  .logo-lockup{ display:flex; align-items:center; gap:18px; }
+  .zw-mark{ width:110px; height:110px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .zw-mark img{ width:100%; height:100%; object-fit:contain; filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.35)); }
+  .lockup-text{ display:flex; flex-direction:column; gap:2px; }
   .lockup-title{
-    font-family:var(--font-display);
-    font-weight:700;
-    font-size:46px;
-    line-height:1;
-    text-transform:uppercase;
-    color:var(--white);
-    letter-spacing:0.01em;
-    transform: rotate(-2deg);
-    text-shadow: var(--drop-shadow);
+    font-family:var(--font-display); font-weight:700; font-size:46px; line-height:1;
+    text-transform:uppercase; color:var(--white); letter-spacing:0.01em;
+    transform: rotate(-2deg); text-shadow: var(--drop-shadow);
   }
   .lockup-sub{
-    margin-top:10px;
-    font-size:14px;
-    letter-spacing:0.28em;
-    text-transform:uppercase;
-    color:var(--type-muted);
-    font-weight:600;
+    margin-top:10px; font-size:14px; letter-spacing:0.28em;
+    text-transform:uppercase; color:var(--type-muted); font-weight:600;
   }
-
-  .clock-pill{
-    display:flex; flex-direction:column; align-items:flex-end; gap:6px;
-  }
+  .clock-pill{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
   .clock-label{
-    font-family:var(--font-display);
-    background: var(--red);
-    color:var(--white);
-    font-size:12px; letter-spacing:0.18em;
-    padding:4px 10px 3px;
-    transform: rotate(4deg);
-    box-shadow: var(--drop-shadow);
+    font-family:var(--font-display); background: var(--red); color:var(--white);
+    font-size:12px; letter-spacing:0.18em; padding:4px 10px 3px;
+    transform: rotate(4deg); box-shadow: var(--drop-shadow);
   }
   .clock-time{
-    font-family:var(--font-display);
-    font-size:36px;
-    color:var(--white);
-    letter-spacing:0.04em;
-    text-shadow: var(--drop-shadow);
+    font-family:var(--font-display); font-size:36px; color:var(--white);
+    letter-spacing:0.04em; text-shadow: var(--drop-shadow);
   }
 
-  /* ───────── HERO HEADLINE LOCK-UP (p.19) ───────── */
-  .hero{
-    padding: 0;
-    position:relative;
-  }
+  .hero{ position:relative; }
   .hero-eyebrow{
-    display:inline-block;
-    background: var(--red);
-    color:var(--white);
-    font-family:var(--font-display);
-    font-size:20px; letter-spacing:0.06em;
-    padding:5px 12px 4px;
-    transform: rotate(-4deg);
-    box-shadow: var(--drop-shadow);
-    margin-bottom:6px;
+    display:inline-block; background: var(--red); color:var(--white);
+    font-family:var(--font-display); font-size:20px; letter-spacing:0.06em;
+    padding:5px 12px 4px; transform: rotate(-4deg);
+    box-shadow: var(--drop-shadow); margin-bottom:6px;
   }
   .hero-line{
-    font-family:var(--font-display);
-    text-transform:uppercase;
-    color:var(--white);
-    text-shadow: var(--drop-shadow);
-    line-height:0.9;
+    font-family:var(--font-display); text-transform:uppercase; color:var(--white);
+    text-shadow: var(--drop-shadow); line-height:0.9;
     display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;
-    transform: rotate(-4deg);
-    transform-origin: left center;
-    padding-left:4px;
+    transform: rotate(-4deg); transform-origin: left center; padding-left:4px;
   }
-  .hero-line .word-1,
-  .hero-line .word-2,
-  .hero-line .word-3{
-    font-size:70px;
-    display:inline-block;
-  }
-  .hero-line .word-2{
-    color: var(--basecamp);
-  }
-  .hero-sub{
-    margin-top:14px;
-    max-width:880px;
-    font-size:16px;
-    line-height:1.4;
-    color:var(--type-muted);
-    font-weight:400;
-  }
-  /* decorative leaves icon (Basecamp uses leaves per p.22) */
-  .leaf{
-    position:absolute;
-    color: var(--basecamp-shade1);
-    opacity:0.85;
-  }
+  .hero-line .word-1, .hero-line .word-2, .hero-line .word-3{ font-size:70px; display:inline-block; }
+  .hero-line .word-2{ color: var(--basecamp); }
+  .hero-sub{ margin-top:14px; max-width:880px; font-size:16px; line-height:1.4; color:var(--type-muted); }
+  .leaf{ position:absolute; color: var(--basecamp-shade1); opacity:0.85; }
   .leaf.l1{ top:50px; left:380px; width:20px; transform:rotate(-30deg) }
   .leaf.l2{ top:30px; left:680px; width:16px; transform:rotate(40deg) }
   .leaf.l3{ top:96px; left:220px; width:14px; transform:rotate(15deg) }
 
-  /* ───────── INFO GRID ───────── */
   .grid{
-    display:grid;
-    grid-template-columns: 1.15fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 14px;
-    align-self: stretch;
-    min-height:0;
+    display:grid; grid-template-columns: 1.15fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr; gap: 14px; align-self: stretch; min-height:0;
   }
   .card{
-    position:relative;
-    background: var(--basecamp);
-    color: var(--type-dark);
-    border-radius: 4px;
-    padding: 18px 22px;
+    position:relative; background: var(--basecamp); color: var(--type-dark);
+    border-radius: 4px; padding: 18px 22px;
     display:flex; flex-direction:column;
     transition: transform .18s ease, box-shadow .18s ease;
-    overflow:hidden;
-    min-height:0;
+    overflow:hidden; min-height:0; cursor:pointer;
+    border:none; text-align:left; font-family:inherit; width:100%;
   }
-  /* Bark texture inside the card (very subtle) */
   .card::after{
     content:""; position:absolute; inset:0;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><defs><filter id='n'><feTurbulence type='turbulence' baseFrequency='0.015 0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2   0 0 0 0 0.18   0 0 0 0 0.15   0 0 0 0.4 0'/></filter></defs><rect width='400' height='300' filter='url(%23n)' opacity='0.55'/></svg>");
     mix-blend-mode: multiply; opacity:0.22; pointer-events:none;
   }
   .card:focus, .card:hover{
-    outline:none;
-    transform: translateY(-3px);
+    outline:none; transform: translateY(-3px);
     box-shadow: 0 14px 0 -4px var(--red), 0 18px 30px rgba(0,0,0,0.45);
   }
-  /* Focus state: red accent corner tab */
   .card:focus::before, .card:hover::before{
-    content:""; position:absolute;
-    top:-6px; left:-6px;
-    width:48px; height:48px;
-    background: var(--red);
-    transform: rotate(-8deg);
-    z-index:1;
+    content:""; position:absolute; top:-6px; left:-6px;
+    width:48px; height:48px; background: var(--red);
+    transform: rotate(-8deg); z-index:1;
   }
-
-  .card-head{
-    display:flex; align-items:center; gap:8px;
-    margin-bottom:8px;
-    position:relative; z-index:2;
-  }
+  .card-head{ display:flex; align-items:center; gap:8px; margin-bottom:8px; position:relative; z-index:2; }
   .card-tag{
-    background: var(--red);
-    color: var(--white);
-    font-family: var(--font-display);
-    font-size: 14px;
-    letter-spacing:0.1em;
-    padding: 4px 10px 3px;
-    transform: rotate(-3deg);
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
-    text-transform:uppercase;
-    flex-shrink:0;
+    background: var(--red); color: var(--white); font-family: var(--font-display);
+    font-size: 14px; letter-spacing:0.1em; padding: 4px 10px 3px;
+    transform: rotate(-3deg); box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    text-transform:uppercase; flex-shrink:0;
   }
   .card-h{
-    font-family: var(--font-display);
-    font-size: 26px;
-    text-transform:uppercase;
-    color: var(--basecamp-shade2);
-    letter-spacing: 0.02em;
-    transform: rotate(-1.5deg);
-    line-height:1;
+    font-family: var(--font-display); font-size: 26px; text-transform:uppercase;
+    color: var(--basecamp-shade2); letter-spacing: 0.02em;
+    transform: rotate(-1.5deg); line-height:1;
   }
   .card-body{ position:relative; z-index:2; display:flex; flex-direction:column; flex:1; }
 
-  /* ── WIFI card ── */
-  .wifi-body{
-    flex-direction:row !important;
-    align-items:stretch;
-    gap:14px;
-  }
-  .wifi-info{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-  }
+  .wifi-body{ flex-direction:row !important; align-items:stretch; gap:14px; }
+  .wifi-info{ flex:1; display:flex; flex-direction:column; min-width:0; }
   .wifi-label{
-    font-family:var(--font-display);
-    font-size:14px; letter-spacing:0.22em;
-    color: var(--basecamp-shade1);
-    text-transform:uppercase;
-    margin-top:6px;
+    font-family:var(--font-display); font-size:14px; letter-spacing:0.22em;
+    color: var(--basecamp-shade1); text-transform:uppercase; margin-top:6px;
   }
   .wifi-value{
-    font-family: var(--font-display);
-    font-size:24px; font-weight:700;
-    color: var(--basecamp-shade2);
-    letter-spacing:0.02em;
-    line-height:1.1;
-    margin-top:4px;
-    text-transform:uppercase;
-    transform:rotate(-1.5deg);
-    transform-origin:left center;
-    word-break:break-word;
+    font-family: var(--font-display); font-size:24px; font-weight:700;
+    color: var(--basecamp-shade2); letter-spacing:0.02em; line-height:1.1;
+    margin-top:4px; text-transform:uppercase;
+    transform:rotate(-1.5deg); transform-origin:left center; word-break:break-word;
   }
   .wifi-scan-label{
-    margin-top:auto;
-    font-family:var(--font-display);
-    font-size:13px;
-    letter-spacing:0.18em;
-    color: var(--red);
-    text-transform:uppercase;
-    padding-top:10px;
+    margin-top:auto; font-family:var(--font-display); font-size:13px;
+    letter-spacing:0.18em; color: var(--red); text-transform:uppercase; padding-top:10px;
   }
   .wifi-qr{
-    flex-shrink:0;
-    width:130px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#fff;
-    padding:8px;
-    border-radius:4px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
-    align-self:center;
+    flex-shrink:0; width:130px; display:flex; align-items:center; justify-content:center;
+    background:#fff; padding:8px; border-radius:4px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.18); align-self:center;
   }
-  .wifi-qr img{
-    width:100%;
-    height:auto;
-    display:block;
+  .wifi-qr img{ width:100%; height:auto; display:block; }
+
+  .menu-card{ background: var(--red); color: var(--white); }
+  .menu-card .card-tag{ background: var(--basecamp-shade2); }
+  .menu-card .card-h{ color: var(--white); }
+  .menu-card::after{ opacity:0.15; }
+  .menu-list{ display:flex; flex-direction:column; gap:4px; margin-top:2px; }
+  .menu-list-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.18);
+    font-family:var(--font-display); font-size:18px;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .menu-list-item:last-child{ border-bottom:none; }
+  .menu-list-item .arrow{ font-family:var(--font-display); color: var(--white); font-size:16px; }
+  .menu-card-foot{
+    margin-top:auto; font-family:var(--font-display); font-size:11px;
+    letter-spacing:0.2em; color: rgba(255,255,255,0.85);
+    text-transform:uppercase; padding-top:8px;
   }
 
-  /* ── DINING card ── */
-  .dine-row{
-    display:flex; justify-content:space-between; align-items:baseline;
-    padding:5px 0;
-    border-bottom:1px solid rgba(50,50,40,0.12);
-    font-size:16px;
-  }
-  .dine-row:last-of-type{ border-bottom:none }
-  .dine-row .meal{
-    font-weight:600; color: var(--basecamp-shade2);
-  }
-  .dine-row .time{
-    font-family: var(--font-display);
-    font-size:16px;
-    color: var(--red);
-    letter-spacing:0.04em;
-  }
-  .dine-foot{
-    margin-top:auto; padding-top:10px;
-    font-family:var(--font-display);
-    font-size:12px; letter-spacing:0.18em;
-    color: var(--basecamp-shade1);
-    text-transform:uppercase;
-  }
-
-  /* ── CONTACT card ── */
   .contact-phone{
-    font-family: var(--font-display);
-    font-size: 30px;
-    color: var(--basecamp-shade2);
-    letter-spacing:0.04em;
-    margin: 4px 0 10px;
-    transform: rotate(-1deg);
-    line-height:1;
+    font-family: var(--font-display); font-size: 30px; color: var(--basecamp-shade2);
+    letter-spacing:0.04em; margin: 4px 0 10px; transform: rotate(-1deg); line-height:1;
   }
-  .contact-line{
-    display:flex; align-items:center; gap:8px;
-    font-size:15px; padding:3px 0;
-    color: var(--basecamp-shade2);
-  }
-  .contact-line svg{
-    width:15px; height:15px; color: var(--red); flex-shrink:0;
-  }
-  .checkinout{
-    margin-top:auto; padding-top:12px;
-    display:flex; justify-content:space-between; align-items:stretch;
-    gap:10px;
-  }
+  .contact-line{ display:flex; align-items:center; gap:8px; font-size:15px; padding:3px 0; color: var(--basecamp-shade2); }
+  .contact-line svg{ width:15px; height:15px; color: var(--red); flex-shrink:0; }
+  .checkinout{ margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:stretch; gap:10px; }
   .checkinout .col{ text-align:center; flex:1 }
   .checkinout .col-label{
-    font-family:var(--font-display);
-    font-size:12px; letter-spacing:0.2em;
-    color: var(--basecamp-shade1);
-    text-transform:uppercase;
-    margin-bottom:3px;
+    font-family:var(--font-display); font-size:12px; letter-spacing:0.2em;
+    color: var(--basecamp-shade1); text-transform:uppercase; margin-bottom:3px;
   }
-  .checkinout .col-time{
-    font-family: var(--font-display);
-    font-size:28px;
-    color: var(--basecamp-shade2);
-  }
-  .checkinout .divider{
-    width:1px; background: rgba(50,50,40,0.18);
-  }
+  .checkinout .col-time{ font-family: var(--font-display); font-size:28px; color: var(--basecamp-shade2); }
+  .checkinout .divider{ width:1px; background: rgba(50,50,40,0.18); }
 
-  /* ── ZIP WORLD card (uses primary red palette per brand guidelines — Zip World adventures = primary brand) ── */
-  .zip-card{
-    background: var(--red);
-    color: var(--white);
-  }
-  .zip-card::after{
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><defs><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='3' seed='5'/><feColorMatrix values='0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.6 0'/></filter></defs><rect width='400' height='300' filter='url(%23c)' opacity='0.4'/></svg>");
-    opacity:0.18;
-  }
-  .zip-card .card-tag{
-    background: var(--basecamp-shade2);
-  }
+  .zip-card{ background: var(--red); color: var(--white); }
+  .zip-card::after{ opacity:0.18; }
+  .zip-card .card-tag{ background: var(--basecamp-shade2); }
   .zip-card .card-h{ color: var(--white); }
   .zip-card .perk-number{
-    font-family: var(--font-display);
-    font-size: 52px;
-    color: var(--white);
-    line-height:0.9;
-    transform: rotate(-4deg);
-    display:block;
-    text-shadow: var(--drop-shadow);
-    margin: 8px 0 18px;
-    width:fit-content;
+    font-family: var(--font-display); font-size: 52px; color: var(--white);
+    line-height:0.9; transform: rotate(-4deg); display:block;
+    text-shadow: var(--drop-shadow); margin: 8px 0 18px; width:fit-content;
   }
-  .zip-card .perk-sub{
-    font-size:14px; line-height:1.4;
-    color: rgba(255,255,255,0.95);
-    margin-bottom:10px;
-  }
+  .zip-card .perk-sub{ font-size:14px; line-height:1.4; color: rgba(255,255,255,0.95); margin-bottom:10px; }
   .zip-list{ margin-top:auto; font-size:14px }
-  .zip-list .row{
-    display:flex; justify-content:space-between;
-    padding:4px 0;
-    border-bottom:1px solid rgba(255,255,255,0.18);
-  }
-  .zip-list .row .when{
-    font-family:var(--font-display);
-    letter-spacing:0.04em;
-    font-size:15px;
-  }
+  .zip-list .row{ display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.18); }
   .zip-list .row:last-child{ border-bottom:none }
+  .zip-list .row .when{ font-family:var(--font-display); letter-spacing:0.04em; font-size:15px; }
 
-  /* ── AMENITIES ── */
-  .amen-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 14px;
-  }
-  .amen{
-    display:flex; align-items:center; gap:8px;
-    font-size:15px; color: var(--basecamp-shade2);
-    font-weight:600;
-  }
-  .amen .arrow{
-    color: var(--red);
-    flex-shrink:0;
-    font-size:15px;
-    transform: translateY(-1px);
-  }
+  .amen-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+  .amen{ display:flex; align-items:center; gap:8px; font-size:15px; color: var(--basecamp-shade2); font-weight:600; }
+  .amen .arrow{ color: var(--red); flex-shrink:0; font-size:15px; transform: translateY(-1px); }
 
-  /* ── EXPLORE card (spans 2) ── */
-  .explore-list{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px 28px;
-    list-style:none;
-  }
+  .explore-list{ display:grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; list-style:none; }
   .explore-list li{
     display:flex; justify-content:space-between; align-items:baseline;
-    padding:5px 0;
-    border-bottom:1px solid rgba(50,50,40,0.12);
-    font-size:15px;
+    padding:5px 0; border-bottom:1px solid rgba(50,50,40,0.12); font-size:15px;
   }
   .explore-list .name{ font-weight:600; color: var(--basecamp-shade2) }
-  .explore-list .meta{
-    font-family:var(--font-display);
-    font-size:12px;
-    letter-spacing:0.14em;
-    color: var(--red);
-    text-transform:uppercase;
-  }
+  .explore-list .meta{ font-family:var(--font-display); font-size:12px; letter-spacing:0.14em; color: var(--red); text-transform:uppercase; }
 
-  /* ───────── FOOTER ───────── */
-  footer{
-    display:flex; justify-content:space-between; align-items:center;
-    padding-top:4px;
-    border-top: 2px solid rgba(195,190,165,0.18);
-  }
-  footer .thanks{
-    font-family: var(--font-display);
-    font-size: 15px;
-    letter-spacing:0.12em;
-    color: var(--basecamp);
-  }
+  footer{ display:flex; justify-content:space-between; align-items:center; padding-top:4px; border-top: 2px solid rgba(195,190,165,0.18); }
+  footer .thanks{ font-family: var(--font-display); font-size: 15px; letter-spacing:0.12em; color: var(--basecamp); }
   footer .thanks .red{
-    background: var(--red);
-    color: var(--white);
-    padding: 2px 8px 1px;
-    transform: rotate(-3deg);
-    display:inline-block;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
-    margin-right:6px;
+    background: var(--red); color: var(--white); padding: 2px 8px 1px;
+    transform: rotate(-3deg); display:inline-block;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.15); margin-right:6px;
   }
-  .nav-hint{
-    display:flex; gap:22px; align-items:center;
-    font-family:var(--font-display);
-    font-size:12px; letter-spacing:0.18em;
-    color: var(--type-muted);
-    text-transform:uppercase;
-  }
+  .nav-hint{ display:flex; gap:22px; align-items:center; font-family:var(--font-display); font-size:12px; letter-spacing:0.18em; color: var(--type-muted); text-transform:uppercase; }
   .key{
     display:inline-flex; align-items:center; justify-content:center;
-    min-width:24px; height:24px; padding:0 7px;
-    border:1.5px solid var(--basecamp);
-    background: transparent;
-    color: var(--white);
-    font-family: var(--font-display);
-    font-size:13px;
-    margin-right:6px;
+    min-width:24px; height:24px; padding:0 7px; border:1.5px solid var(--basecamp);
+    background: transparent; color: var(--white); font-family: var(--font-display);
+    font-size:13px; margin-right:6px;
   }
 
+  /* ─────────── MENU SELECTOR ─────────── */
+  .selector-stage{
+    height:100vh; width:100vw; padding: 28px 48px 22px;
+    display:flex; flex-direction:column; gap:18px; overflow:hidden;
+  }
+  .selector-header{ display:flex; align-items:center; gap:24px; flex-shrink:0; }
+  .selector-title{
+    font-family:var(--font-display); font-size:44px; line-height:1;
+    text-transform:uppercase; color:var(--white);
+    transform: rotate(-2deg); text-shadow: var(--drop-shadow);
+  }
+  .selector-eyebrow{
+    display:inline-block; background: var(--basecamp); color:var(--basecamp-shade2);
+    font-family:var(--font-display); font-size:13px; letter-spacing:0.18em;
+    padding:3px 10px 2px; transform: rotate(-3deg); box-shadow: var(--drop-shadow); margin-bottom:6px;
+  }
+  .selector-grid{
+    flex:1; display:grid; grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr; gap:16px; min-height:0;
+  }
+  .selector-grid .card{ justify-content:flex-start; }
+  .selector-card-desc{ font-size:15px; color:var(--basecamp-shade2); margin-top:4px; line-height:1.4; }
+  .selector-card-foot{
+    margin-top:auto; font-family:var(--font-display); font-size:12px;
+    letter-spacing:0.18em; color:var(--red); text-transform:uppercase; padding-top:10px;
+  }
+
+  /* ─────────── PDF VIEWER ─────────── */
+  .pdf-stage{ height:100vh; width:100vw; display:flex; flex-direction:column; }
+  .pdf-header{
+    flex-shrink:0; padding: 20px 48px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom: 2px solid rgba(195,190,165,0.18);
+    background: var(--basecamp-shade2); position:relative; z-index:3;
+  }
+  .pdf-header-left{ display:flex; align-items:center; gap:22px; }
+  .back-btn{
+    display:flex; align-items:center; gap:10px;
+    background: var(--red); color: var(--white); font-family:var(--font-display);
+    font-size:18px; letter-spacing:0.1em; padding: 11px 20px 10px;
+    border:none; text-transform:uppercase; cursor:pointer;
+    box-shadow: var(--drop-shadow); transform: rotate(-2deg);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .back-btn:focus, .back-btn:hover{
+    outline:none; transform: rotate(-2deg) translateY(-2px);
+    box-shadow: 5px 7px 0 rgba(0,0,0,0.25), 0 0 0 3px var(--basecamp);
+  }
+  .back-btn .arrow-icon{ font-family:var(--font-display); font-size:22px; transform: translateY(-1px); }
+  .pdf-eyebrow{
+    display:inline-block; background: var(--basecamp); color:var(--basecamp-shade2);
+    font-family:var(--font-display); font-size:13px; letter-spacing:0.18em;
+    padding:3px 10px 2px; transform: rotate(-3deg); box-shadow: var(--drop-shadow);
+  }
+  .pdf-title{
+    font-family:var(--font-display); font-size:40px; line-height:1;
+    text-transform:uppercase; color:var(--white);
+    transform: rotate(-2deg); text-shadow: var(--drop-shadow); margin-top:6px;
+  }
+  .pdf-frame-wrap{ flex:1; background:#3a3a32; position:relative; overflow:hidden; }
+  .pdf-frame-wrap iframe{
+    width:100%; height:100%; border:none; display:block;
+  }
+  .pdf-footer{
+    flex-shrink:0; padding: 12px 48px;
+    display:flex; justify-content:space-between; align-items:center;
+    background: var(--basecamp-shade2); border-top: 2px solid rgba(195,190,165,0.18);
+    font-family:var(--font-display); font-size:12px; letter-spacing:0.18em;
+    color: var(--type-muted); text-transform:uppercase; position:relative; z-index:3;
+  }
 </style>
 </head>
 <body>
@@ -519,231 +329,335 @@
 <div class="bark" aria-hidden="true"></div>
 <div class="wash" aria-hidden="true"></div>
 
-<main class="stage">
-
-  <!-- ───────── HEADER ───────── -->
-  <header>
-    <div class="logo-lockup">
-      <div class="zw-mark" aria-label="Zip World Basecamp">
-        <img src="zip-world-basecamp-logo.png" alt="Zip World Basecamp">
-      </div>
-      <div class="lockup-text">
-        <span class="lockup-title">Tyn-y-Coed</span>
-        <span class="lockup-sub">Capel Curig · Eryri</span>
-      </div>
-    </div>
-    <div class="clock-pill">
-      <span class="clock-label">TODAY</span>
-      <span class="clock-time" id="clock">--:--</span>
-    </div>
-  </header>
-
-  <!-- ───────── HERO HEADLINE LOCK-UP ───────── -->
-  <section class="hero">
-    <svg class="leaf l1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
-    <svg class="leaf l2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
-    <svg class="leaf l3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
-
-    <span class="hero-eyebrow">WELCOME TO</span>
-    <div class="hero-line">
-      <span class="word-1">A TRADITIONAL</span>
-      <span class="word-2">WELSH</span>
-      <span class="word-3">INN</span>
-    </div>
-    <p class="hero-sub">In the heart of Eryri (Snowdonia) — cosy log burners, locally sourced food, and the mountains right outside your window.</p>
-  </section>
-
-  <!-- ───────── INFO GRID ───────── -->
-  <div class="grid">
-
-    <!-- WI-FI -->
-    <article class="card" tabindex="0">
-      <div class="card-head">
-        <span class="card-tag">CONNECT</span>
-        <h2 class="card-h">Wi-Fi</h2>
-      </div>
-      <div class="card-body wifi-body">
-        <div class="wifi-info">
-          <div class="wifi-label">Network</div>
-          <div class="wifi-value">Tyn-y-Coed Guest</div>
-          <div class="wifi-scan-label">Scan to connect</div>
+<!-- ─────────── HOME ─────────── -->
+<main class="screen active" id="screen-home">
+  <div class="home-stage">
+    <header>
+      <div class="logo-lockup">
+        <div class="zw-mark" aria-label="Zip World Basecamp">
+          <img src="zip-world-basecamp-logo.png" alt="Zip World Basecamp">
         </div>
-        <div class="wifi-qr">
-          <img src="wifi-qr.jpg" alt="Scan to join the Tyn-y-Coed guest Wi-Fi">
+        <div class="lockup-text">
+          <span class="lockup-title">Tyn-y-Coed</span>
+          <span class="lockup-sub">Capel Curig · Eryri</span>
         </div>
       </div>
-    </article>
+      <div class="clock-pill">
+        <span class="clock-label">TODAY</span>
+        <span class="clock-time" id="clock">--:--</span>
+      </div>
+    </header>
 
-    <!-- DINING -->
-    <article class="card" tabindex="0">
-      <div class="card-head">
-        <span class="card-tag">EAT</span>
-        <h2 class="card-h">Pub Hours</h2>
+    <section class="hero">
+      <svg class="leaf l1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+      <svg class="leaf l2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+      <svg class="leaf l3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3c-7 0-13 5-13 12 0 3 1 5 2 6 4-1 8-3 11-7 2-3 3-7 3-11-1 0-2 0-3 0z"/></svg>
+      <span class="hero-eyebrow">WELCOME TO</span>
+      <div class="hero-line">
+        <span class="word-1">A TRADITIONAL</span>
+        <span class="word-2">WELSH</span>
+        <span class="word-3">INN</span>
       </div>
-      <div class="card-body">
-        <div class="dine-row"><span class="meal">Breakfast</span><span class="time">7:30 – 10:00</span></div>
-        <div class="dine-row"><span class="meal">Lunch</span><span class="time">12:00 – 16:00</span></div>
-        <div class="dine-row"><span class="meal">Dinner Mon–Thu</span><span class="time">17:00 – 20:30</span></div>
-        <div class="dine-row"><span class="meal">Dinner Fri–Sat</span><span class="time">17:00 – 21:00</span></div>
-        <div class="dine-row"><span class="meal">Sunday all day</span><span class="time">12:00 – 20:00</span></div>
-        <div class="dine-foot">Walk-ins always welcome</div>
-      </div>
-    </article>
+      <p class="hero-sub">In the heart of Eryri (Snowdonia) — cosy log burners, locally sourced food, and the mountains right outside your window.</p>
+    </section>
 
-    <!-- RECEPTION -->
-    <article class="card" tabindex="0">
-      <div class="card-head">
-        <span class="card-tag">CALL</span>
-        <h2 class="card-h">Reception</h2>
-      </div>
-      <div class="card-body">
-        <div class="contact-phone">01690 720 331</div>
-        <div class="contact-line">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span>res@tyn-y-coed.co.uk</span>
-        </div>
-        <div class="contact-line">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>Capel Curig, LL24 0EE</span>
-        </div>
-        <div class="checkinout">
-          <div class="col">
-            <div class="col-label">Check-In</div>
-            <div class="col-time">3 PM</div>
+    <div class="grid">
+      <article class="card" tabindex="0">
+        <div class="card-head"><span class="card-tag">CONNECT</span><h2 class="card-h">Wi-Fi</h2></div>
+        <div class="card-body wifi-body">
+          <div class="wifi-info">
+            <div class="wifi-label">Network</div>
+            <div class="wifi-value">Tyn-y-Coed Guest</div>
+            <div class="wifi-scan-label">Scan to connect</div>
           </div>
-          <div class="divider"></div>
-          <div class="col">
-            <div class="col-label">Check-Out</div>
-            <div class="col-time">11 AM</div>
+          <div class="wifi-qr"><img src="wifi-qr.jpg" alt="Scan to join the Tyn-y-Coed guest Wi-Fi"></div>
+        </div>
+      </article>
+
+      <button class="card menu-card" tabindex="0" data-nav="menus">
+        <div class="card-head"><span class="card-tag">EAT</span><h2 class="card-h">Our Menus</h2></div>
+        <div class="card-body">
+          <div class="menu-list">
+            <div class="menu-list-item"><span>Breakfast</span><span class="arrow">▸</span></div>
+            <div class="menu-list-item"><span>Lunch</span><span class="arrow">▸</span></div>
+            <div class="menu-list-item"><span>Main Menu</span><span class="arrow">▸</span></div>
+            <div class="menu-list-item"><span>Drinks</span><span class="arrow">▸</span></div>
+            <div class="menu-list-item"><span>Kids</span><span class="arrow">▸</span></div>
+          </div>
+          <div class="menu-card-foot">Press OK to browse</div>
+        </div>
+      </button>
+
+      <article class="card" tabindex="0">
+        <div class="card-head"><span class="card-tag">CALL</span><h2 class="card-h">Reception</h2></div>
+        <div class="card-body">
+          <div class="contact-phone">01690 720 331</div>
+          <div class="contact-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>res@tyn-y-coed.co.uk</span>
+          </div>
+          <div class="contact-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Capel Curig, LL24 0EE</span>
+          </div>
+          <div class="checkinout">
+            <div class="col"><div class="col-label">Check-In</div><div class="col-time">3 PM</div></div>
+            <div class="divider"></div>
+            <div class="col"><div class="col-label">Check-Out</div><div class="col-time">11 AM</div></div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <!-- ZIP WORLD (uses primary brand red — this is the Zip World mothership, not Basecamp) -->
-    <article class="card zip-card" tabindex="0">
-      <div class="card-head">
-        <span class="card-tag">UNLOCK</span>
-        <h2 class="card-h">Zip World</h2>
-      </div>
-      <div class="card-body">
-        <div class="perk-number">10% OFF</div>
-        <div class="perk-sub">Guest discount across every Zip World site. Show your booking at reception.</div>
-        <div class="zip-list">
-          <div class="row"><span>Betws-y-Coed</span><span class="when">13 MIN</span></div>
-          <div class="row"><span>Penrhyn Quarry</span><span class="when">22 MIN</span></div>
-          <div class="row"><span>Llechwedd</span><span class="when">26 MIN</span></div>
+      <article class="card zip-card" tabindex="0">
+        <div class="card-head"><span class="card-tag">UNLOCK</span><h2 class="card-h">Zip World</h2></div>
+        <div class="card-body">
+          <div class="perk-number">10% OFF</div>
+          <div class="perk-sub">Guest discount across every Zip World site. Show your booking at reception.</div>
+          <div class="zip-list">
+            <div class="row"><span>Betws-y-Coed</span><span class="when">13 MIN</span></div>
+            <div class="row"><span>Penrhyn Quarry</span><span class="when">22 MIN</span></div>
+            <div class="row"><span>Llechwedd</span><span class="when">26 MIN</span></div>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <!-- AMENITIES -->
-    <article class="card" tabindex="0">
-      <div class="card-head">
-        <span class="card-tag">INSIDE</span>
-        <h2 class="card-h">In the Inn</h2>
-      </div>
-      <div class="card-body">
-        <div class="amen-grid">
-          <div class="amen"><span class="arrow">▸</span> Tea &amp; Coffee</div>
-          <div class="amen"><span class="arrow">▸</span> Log Burners</div>
-          <div class="amen"><span class="arrow">▸</span> En-suite Showers</div>
-          <div class="amen"><span class="arrow">▸</span> Free Parking</div>
-          <div class="amen"><span class="arrow">▸</span> Dog Friendly</div>
-          <div class="amen"><span class="arrow">▸</span> Mountain Views</div>
-          <div class="amen"><span class="arrow">▸</span> Secure Bike Store</div>
-          <div class="amen"><span class="arrow">▸</span> Laundry Room</div>
+      <article class="card" tabindex="0">
+        <div class="card-head"><span class="card-tag">INSIDE</span><h2 class="card-h">In the Inn</h2></div>
+        <div class="card-body">
+          <div class="amen-grid">
+            <div class="amen"><span class="arrow">▸</span> Tea &amp; Coffee</div>
+            <div class="amen"><span class="arrow">▸</span> Log Burners</div>
+            <div class="amen"><span class="arrow">▸</span> En-suite Showers</div>
+            <div class="amen"><span class="arrow">▸</span> Free Parking</div>
+            <div class="amen"><span class="arrow">▸</span> Dog Friendly</div>
+            <div class="amen"><span class="arrow">▸</span> Mountain Views</div>
+            <div class="amen"><span class="arrow">▸</span> Secure Bike Store</div>
+            <div class="amen"><span class="arrow">▸</span> Laundry Room</div>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <!-- ON YOUR DOORSTEP -->
-    <article class="card" tabindex="0" style="grid-column: span 3">
-      <div class="card-head">
-        <span class="card-tag">EXPLORE</span>
-        <h2 class="card-h">On Your Doorstep</h2>
-      </div>
-      <div class="card-body">
-        <ul class="explore-list">
-          <li><span class="name">Moel Siabod</span><span class="meta">▸ Hike · From the door</span></li>
-          <li><span class="name">Yr Wyddfa (Snowdon)</span><span class="meta">▸ Mountain · 10 min drive</span></li>
-          <li><span class="name">Swallow Falls</span><span class="meta">▸ Waterfall · 8 min drive</span></li>
-          <li><span class="name">Tryfan &amp; the Glyders</span><span class="meta">▸ Hike · 10 min drive</span></li>
-          <li><span class="name">Fairy Glen, Betws-y-Coed</span><span class="meta">▸ Beauty spot · 12 min</span></li>
-          <li><span class="name">Gwydir Forest</span><span class="meta">▸ MTB &amp; trails · 15 min</span></li>
-        </ul>
-      </div>
-    </article>
+      <article class="card" tabindex="0" style="grid-column: span 3">
+        <div class="card-head"><span class="card-tag">EXPLORE</span><h2 class="card-h">On Your Doorstep</h2></div>
+        <div class="card-body">
+          <ul class="explore-list">
+            <li><span class="name">Moel Siabod</span><span class="meta">▸ Hike · From the door</span></li>
+            <li><span class="name">Yr Wyddfa (Snowdon)</span><span class="meta">▸ Mountain · 10 min drive</span></li>
+            <li><span class="name">Swallow Falls</span><span class="meta">▸ Waterfall · 8 min drive</span></li>
+            <li><span class="name">Tryfan &amp; the Glyders</span><span class="meta">▸ Hike · 10 min drive</span></li>
+            <li><span class="name">Fairy Glen, Betws-y-Coed</span><span class="meta">▸ Beauty spot · 12 min</span></li>
+            <li><span class="name">Gwydir Forest</span><span class="meta">▸ MTB &amp; trails · 15 min</span></li>
+          </ul>
+        </div>
+      </article>
+    </div>
 
+    <footer>
+      <div class="thanks"><span class="red">DIOLCH</span> Thank you for staying with us</div>
+      <div class="nav-hint">
+        <span><span class="key">▲</span><span class="key">▼</span><span class="key">◀</span><span class="key">▶</span> Navigate</span>
+        <span><span class="key">OK</span> Select</span>
+      </div>
+    </footer>
   </div>
+</main>
 
-  <!-- ───────── FOOTER ───────── -->
-  <footer>
-    <div class="thanks"><span class="red">DIOLCH</span> Thank you for staying with us</div>
-    <div class="nav-hint">
-      <span><span class="key">▲</span><span class="key">▼</span><span class="key">◀</span><span class="key">▶</span> Navigate</span>
-      <span><span class="key">OK</span> Select</span>
+<!-- ─────────── MENU SELECTOR ─────────── -->
+<main class="screen" id="screen-menus">
+  <div class="selector-stage">
+    <div class="selector-header">
+      <button class="back-btn" data-back tabindex="0"><span class="arrow-icon">◂</span> Back</button>
+      <div>
+        <span class="selector-eyebrow">BWYDLENNI</span>
+        <div class="selector-title">Choose a Menu</div>
+      </div>
     </div>
-  </footer>
+    <div class="selector-grid">
+      <button class="card" data-pdf="breakfast.pdf" data-eyebrow="BWYDLEN BRECWAST" data-title="Breakfast" tabindex="0">
+        <div class="card-head"><span class="card-tag">MORNING</span><h2 class="card-h">Breakfast</h2></div>
+        <div class="card-body">
+          <div class="selector-card-desc">Full Welsh, veggie options, lighter starts.</div>
+          <div class="selector-card-foot">Served 7:30 – 10:00 ▸</div>
+        </div>
+      </button>
+      <button class="card" data-pdf="lunch.pdf" data-eyebrow="BWYDLEN AMSER CINIO" data-title="Lunch" tabindex="0">
+        <div class="card-head"><span class="card-tag">MIDDAY</span><h2 class="card-h">Lunch</h2></div>
+        <div class="card-body">
+          <div class="selector-card-desc">Light bites, paninis, jackets &amp; desserts.</div>
+          <div class="selector-card-foot">Served 12:00 – 16:00 ▸</div>
+        </div>
+      </button>
+      <button class="card" data-pdf="main-menu.pdf" data-eyebrow="PRIF FWYDLEN" data-title="Main Menu" tabindex="0">
+        <div class="card-head"><span class="card-tag">EVENING</span><h2 class="card-h">Main Menu</h2></div>
+        <div class="card-body">
+          <div class="selector-card-desc">Starters, grills, mains, sides &amp; puds.</div>
+          <div class="selector-card-foot">Served from 17:00 ▸</div>
+        </div>
+      </button>
+      <button class="card" data-pdf="drinks.pdf" data-eyebrow="DIODYDD" data-title="Drinks" tabindex="0">
+        <div class="card-head"><span class="card-tag">BAR</span><h2 class="card-h">Drinks</h2></div>
+        <div class="card-body">
+          <div class="selector-card-desc">Cask ales, ciders, wines, soft drinks &amp; alcohol-free.</div>
+          <div class="selector-card-foot">Full bar list ▸</div>
+        </div>
+      </button>
+      <button class="card" data-pdf="kids.pdf" data-eyebrow="BWYDLEN PLANT" data-title="Kids' Menu" tabindex="0">
+        <div class="card-head"><span class="card-tag">FAMILY</span><h2 class="card-h">Kids' Menu</h2></div>
+        <div class="card-body">
+          <div class="selector-card-desc">Mains £7.50 · Desserts £4.50.</div>
+          <div class="selector-card-foot">Little adventurers ▸</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</main>
 
+<!-- ─────────── PDF VIEWER ─────────── -->
+<main class="screen" id="screen-pdf">
+  <div class="pdf-stage">
+    <div class="pdf-header">
+      <div class="pdf-header-left">
+        <button class="back-btn" data-back tabindex="0"><span class="arrow-icon">◂</span> Back</button>
+        <div>
+          <span class="pdf-eyebrow" id="pdf-eyebrow">BWYDLEN</span>
+          <div class="pdf-title" id="pdf-title">Menu</div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-frame-wrap">
+      <iframe id="pdf-frame" title="Menu PDF" src=""></iframe>
+    </div>
+    <div class="pdf-footer">
+      <span>Tyn-y-Coed · Tafarn Gymreig Draddodiadol · Traditional Welsh Inn</span>
+      <span><span class="key">◂</span> Back to menus</span>
+    </div>
+  </div>
 </main>
 
 <script>
+  // ── Clock ──
   function updateClock(){
     const d = new Date();
     const h = String(d.getHours()).padStart(2,'0');
     const m = String(d.getMinutes()).padStart(2,'0');
-    document.getElementById('clock').textContent = h + ':' + m;
+    const el = document.getElementById('clock');
+    if (el) el.textContent = h + ':' + m;
   }
   updateClock();
   setInterval(updateClock, 30000);
 
-  const cards = Array.from(document.querySelectorAll('.card'));
-  if (cards.length) cards[0].focus();
+  // ── Screens ──
+  const screens = {
+    home:  document.getElementById('screen-home'),
+    menus: document.getElementById('screen-menus'),
+    pdf:   document.getElementById('screen-pdf'),
+  };
+  const navStack = ['home'];
 
-  function rectOf(el){ return el.getBoundingClientRect(); }
-  function nearestIn(direction, from){
-    const f = rectOf(from);
-    const fx = f.left + f.width/2;
-    const fy = f.top + f.height/2;
-    let best = null, bestScore = Infinity;
-    cards.forEach(c => {
-      if (c === from) return;
-      const r = rectOf(c);
-      const cx = r.left + r.width/2;
-      const cy = r.top + r.height/2;
-      const dx = cx - fx, dy = cy - fy;
-      if (direction === 'left'  && dx >= -2) return;
-      if (direction === 'right' && dx <=  2) return;
-      if (direction === 'up'    && dy >= -2) return;
-      if (direction === 'down'  && dy <=  2) return;
-      let primary, secondary;
-      if (direction === 'left' || direction === 'right'){
-        primary = Math.abs(dx); secondary = Math.abs(dy) * 2;
-      } else {
-        primary = Math.abs(dy); secondary = Math.abs(dx) * 2;
+  function showScreen(name){
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[name].classList.add('active');
+    if (name === 'home'){
+      screens.home.querySelector('.card')?.focus();
+    } else if (name === 'menus'){
+      screens.menus.querySelector('[data-pdf]')?.focus();
+    } else if (name === 'pdf'){
+      screens.pdf.querySelector('[data-back]')?.focus();
+    }
+  }
+  function navigateTo(name){ navStack.push(name); showScreen(name); }
+  function navigateBack(){
+    if (navStack.length > 1){
+      navStack.pop();
+      const dest = navStack[navStack.length - 1];
+      showScreen(dest);
+      if (dest !== 'pdf'){
+        document.getElementById('pdf-frame').src = ''; // unload PDF when leaving viewer
       }
-      const score = primary + secondary;
-      if (score < bestScore){ bestScore = score; best = c; }
+    }
+  }
+
+  function openPdf(file, eyebrow, title){
+    document.getElementById('pdf-eyebrow').textContent = eyebrow;
+    document.getElementById('pdf-title').textContent = title;
+    // #view=FitH fits page width; toolbar/navpanes hidden on viewers that support it
+    document.getElementById('pdf-frame').src = file + '#view=FitH&toolbar=0&navpanes=0';
+    navigateTo('pdf');
+  }
+
+  // "Our Menus" card -> selector
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    el.addEventListener('click', () => navigateTo(el.dataset.nav));
+    el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); navigateTo(el.dataset.nav); }});
+  });
+  // A menu card -> open its PDF
+  document.querySelectorAll('[data-pdf]').forEach(el => {
+    const go = () => openPdf(el.dataset.pdf, el.dataset.eyebrow, el.dataset.title);
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
+  });
+  // Back buttons
+  document.querySelectorAll('[data-back]').forEach(el => {
+    el.addEventListener('click', () => navigateBack());
+    el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); navigateBack(); }});
+  });
+  window.addEventListener('popstate', () => { if (navStack.length > 1) navigateBack(); });
+
+  // ── Spatial navigation between cards ──
+  function rectOf(el){ return el.getBoundingClientRect(); }
+  function nearestIn(direction, from, candidates){
+    const f = rectOf(from);
+    const fx = f.left + f.width/2, fy = f.top + f.height/2;
+    let best=null, bestScore=Infinity;
+    candidates.forEach(c => {
+      if (c===from) return;
+      const r = rectOf(c);
+      if (r.width===0 && r.height===0) return;
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      const dx = cx-fx, dy = cy-fy;
+      if (direction==='left'  && dx>=-2) return;
+      if (direction==='right' && dx<= 2) return;
+      if (direction==='up'    && dy>=-2) return;
+      if (direction==='down'  && dy<= 2) return;
+      let primary, secondary;
+      if (direction==='left'||direction==='right'){ primary=Math.abs(dx); secondary=Math.abs(dy)*2; }
+      else { primary=Math.abs(dy); secondary=Math.abs(dx)*2; }
+      const score = primary+secondary;
+      if (score<bestScore){ bestScore=score; best=c; }
     });
     return best;
   }
 
   document.addEventListener('keydown', (e) => {
-    const active = document.activeElement;
-    if (!cards.includes(active)) { cards[0].focus(); return; }
-    let dir = null;
-    switch(e.key){
-      case 'ArrowLeft':  dir = 'left'; break;
-      case 'ArrowRight': dir = 'right'; break;
-      case 'ArrowUp':    dir = 'up'; break;
-      case 'ArrowDown':  dir = 'down'; break;
+    const activeScreen = document.querySelector('.screen.active');
+    if (!activeScreen) return;
+
+    // Back / Escape
+    if (e.key==='Escape'||e.key==='Backspace'||e.key==='GoBack'||e.key==='BrowserBack'){
+      if (navStack.length > 1){ e.preventDefault(); navigateBack(); }
+      return;
     }
-    if (dir){
-      const next = nearestIn(dir, active);
-      if (next){ e.preventDefault(); next.focus(); }
+
+    // Spatial nav on home + selector
+    if (activeScreen.id==='screen-home' || activeScreen.id==='screen-menus'){
+      const cards = Array.from(activeScreen.querySelectorAll('.card'));
+      const active = document.activeElement;
+      if (!cards.includes(active)){ cards[0]?.focus(); return; }
+      let dir=null;
+      if (e.key==='ArrowLeft')  dir='left';
+      if (e.key==='ArrowRight') dir='right';
+      if (e.key==='ArrowUp')    dir='up';
+      if (e.key==='ArrowDown')  dir='down';
+      if (dir){
+        const next = nearestIn(dir, active, cards);
+        if (next){ e.preventDefault(); next.focus(); }
+      }
+      return;
     }
+    // On the PDF screen the browser's built-in viewer handles arrow-key scrolling.
   });
+
+  showScreen('home');
 </script>
 </body>
 </html>
