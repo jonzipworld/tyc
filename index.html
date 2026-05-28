@@ -659,8 +659,12 @@
     let started = false;
     let padTimer = null;
 
-    // Pentatonic-ish soft notes (Hz) for a calm, never-dissonant feel
-    const PAD_NOTES = [196.00, 220.00, 261.63, 293.66, 329.63]; // G3 A3 C4 D4 E4
+    // Bright C-major pentatonic, higher register — warm and welcoming, never eerie.
+    // C5 D5 E5 G5 A5 C6  (one octave up from before = lighter, friendlier)
+    const PAD_NOTES = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+    // A gentle repeating melodic shape so it feels musical, not random/ambient-creepy
+    const MELODY = [0, 2, 4, 2, 3, 1, 4, 5, 3, 1, 2, 0];
+    let melodyStep = 0;
 
     function init(){
       if (ctx) return;
@@ -672,39 +676,40 @@
       master.connect(ctx.destination);
     }
 
-    // A single soft sine "voice" with gentle attack/release
-    function voice(freq, dur, peak, type='sine', when=0){
+    // A soft "voice" with gentle attack/release. type triangle = a little warmer/rounder.
+    function voice(freq, dur, peak, type='triangle', when=0){
       if (!ctx) return;
       const t = ctx.currentTime + when;
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
       osc.type = type;
       osc.frequency.value = freq;
-      // soft lowpass so nothing is harsh
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowpass';
-      lp.frequency.value = 2200;
+      lp.frequency.value = 3200;          // brighter than before
       osc.connect(lp); lp.connect(g); g.connect(master);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(peak, t + dur*0.25);
+      g.gain.exponentialRampToValueAtTime(peak, t + Math.min(0.04, dur*0.2));  // quick, plucky attack
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       osc.start(t);
       osc.stop(t + dur + 0.05);
     }
 
-    // Ambient pad: occasionally lay down a soft, long, overlapping note
+    // Ambient melody: short, light plucked notes following a cheerful pattern,
+    // with a soft note a third/fifth above for a little warmth.
     function padTick(){
       if (!ctx || muted) return;
-      const note = PAD_NOTES[Math.floor(Math.random()*PAD_NOTES.length)];
-      // play the note and a soft fifth above, very quiet and long
-      voice(note, 6.5, 0.06, 'sine');
-      if (Math.random() < 0.5) voice(note*1.5, 7.5, 0.035, 'sine', 0.4);
+      const idx = MELODY[melodyStep % MELODY.length];
+      melodyStep++;
+      const note = PAD_NOTES[idx];
+      voice(note, 1.1, 0.07, 'triangle');                 // short, bell-like pluck
+      voice(note*2, 0.9, 0.025, 'sine', 0.02);            // soft shimmer an octave up
     }
 
     function startAmbient(){
       if (padTimer) return;
       padTick();
-      padTimer = setInterval(padTick, 4200); // new soft note every ~4s, they overlap
+      padTimer = setInterval(padTick, 900);  // a note every ~0.9s — gentle, flowing pace
     }
 
     // Called on the first user gesture
