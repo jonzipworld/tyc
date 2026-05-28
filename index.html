@@ -153,8 +153,8 @@
   }
   .card-body{ position:relative; z-index:2; display:flex; flex-direction:column; flex:1; }
 
-  .wifi-body{ flex-direction:row !important; align-items:stretch; gap:14px; }
-  .wifi-info{ flex:1; display:flex; flex-direction:column; min-width:0; }
+  .wifi-body{ flex-direction:row !important; align-items:stretch; gap:18px; min-height:0; }
+  .wifi-info{ flex:1; display:flex; flex-direction:column; min-width:0; justify-content:center; }
   .wifi-label{
     font-family:var(--font-display); font-size:14px; letter-spacing:0.22em;
     color: var(--basecamp-shade1); text-transform:uppercase; margin-top:6px;
@@ -166,15 +166,25 @@
     transform:rotate(-1.5deg); transform-origin:left center; word-break:break-word;
   }
   .wifi-scan-label{
-    margin-top:auto; font-family:var(--font-display); font-size:13px;
-    letter-spacing:0.18em; color: var(--red); text-transform:uppercase; padding-top:10px;
+    margin-top:18px; font-family:var(--font-display); font-size:13px;
+    letter-spacing:0.18em; color: var(--red); text-transform:uppercase;
   }
+  /* QR sits on the right, recoloured granite-on-stone to blend in (8:1 contrast).
+     Sized to fit ENTIRELY within the card height so the whole code always shows. */
   .wifi-qr{
-    flex-shrink:0; width:130px; display:flex; align-items:center; justify-content:center;
-    background:#fff; padding:8px; border-radius:4px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.18); align-self:center;
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent;
+    height:100%;
+    padding:4px 0;
   }
-  .wifi-qr img{ width:100%; height:auto; display:block; }
+  .wifi-qr img{
+    height:100%;
+    width:auto;
+    max-height:100%;
+    object-fit:contain;
+    display:block;
+  }
 
   .menu-card{ background: var(--red); color: var(--white); }
   .menu-card .card-tag{ background: var(--basecamp-shade2); }
@@ -438,7 +448,7 @@
             <div class="wifi-value">Tyn-y-Coed Guest</div>
             <div class="wifi-scan-label">Scan to connect</div>
           </div>
-          <div class="wifi-qr"><img src="wifi-qr.jpg" alt="Scan to join the Tyn-y-Coed guest Wi-Fi"></div>
+          <div class="wifi-qr"><img src="wifi-qr-brand.png" alt="Scan to join the Tyn-y-Coed guest Wi-Fi"></div>
         </div>
       </article>
 
