@@ -275,6 +275,39 @@
     background: transparent; color: var(--white); font-family: var(--font-display);
     font-size:13px; margin-right:6px;
   }
+  /* Red accent key for the HOME-to-exit hint — draws the eye for confused guests */
+  .key-accent{
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+    padding: 0 10px;
+    margin-left: 4px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+    letter-spacing:0.1em;
+    transform-origin: center;
+    animation: homePulse 2.6s ease-in-out infinite;
+  }
+  @keyframes homePulse{
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.25), 0 0 0 0 rgba(240,50,40,0.55);
+    }
+    15% { transform: scale(1.08) rotate(-2deg); }
+    30% { transform: scale(1.08) rotate(2deg); }
+    45% {
+      transform: scale(1.08) rotate(0deg);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.25), 0 0 0 10px rgba(240,50,40,0);
+    }
+    60% { transform: scale(1) rotate(0deg); }
+  }
+  /* Respect users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .key-accent{ animation: none; }
+  }
+  .exit-hint{
+    color: var(--white);
+    font-weight: 600;
+  }
 
   /* ─────────── MENU SELECTOR ─────────── */
   .selector-stage{
@@ -282,6 +315,12 @@
     display:flex; flex-direction:column; gap:18px; overflow:hidden;
   }
   .selector-header{ display:flex; align-items:center; gap:24px; flex-shrink:0; }
+  .selector-footer{
+    flex-shrink:0; display:flex; gap:22px; align-items:center; justify-content:flex-end;
+    padding-top:6px; border-top: 2px solid rgba(195,190,165,0.18);
+    font-family:var(--font-display); font-size:12px; letter-spacing:0.18em;
+    color: var(--type-muted); text-transform:uppercase;
+  }
   .selector-title{
     font-family:var(--font-display); font-size:44px; line-height:1;
     text-transform:uppercase; color:var(--white);
@@ -547,6 +586,7 @@
     <footer>
       <div class="thanks"><span class="red">DIOLCH</span> Thank you for staying with us</div>
       <div class="nav-hint">
+        <span class="exit-hint">Press <span class="key key-accent">⌂ HOME</span> to exit to TV</span>
         <span><span class="key">▲</span><span class="key">▼</span><span class="key">◀</span><span class="key">▶</span> Navigate</span>
         <span><span class="key">OK</span> Select</span>
         <button class="sound-toggle" id="sound-toggle" tabindex="0" aria-label="Toggle sound"><span class="ico" id="sound-ico">♪</span> <span id="sound-label">Sound On</span></button>
@@ -607,6 +647,11 @@
         </div>
       </button>
     </div>
+    <div class="selector-footer">
+      <span class="exit-hint">Press <span class="key key-accent">⌂ HOME</span> to exit to TV</span>
+      <span><span class="key">▲</span><span class="key">▼</span><span class="key">◀</span><span class="key">▶</span> Navigate</span>
+      <span><span class="key">OK</span> Select</span>
+    </div>
   </div>
 </main>
 
@@ -628,6 +673,7 @@
     </div>
     <div class="pdf-footer">
       <span>Tyn-y-Coed · Tafarn Gymreig Draddodiadol · Traditional Welsh Inn</span>
+      <span class="exit-hint">Press <span class="key key-accent">⌂ HOME</span> to exit</span>
       <span><span class="key">◂</span> Back to menus</span>
     </div>
   </div>
